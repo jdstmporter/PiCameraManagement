@@ -12,7 +12,8 @@ class MediaMTX {
     }
 
     async get(which = baseURLS.DEFAULTS) {
-        let mtx= new MediaMTXAPI(this.device,which);
+        let cam = (which===baseURLS.PATHS) ? this.camera : '';
+        let mtx= new MediaMTXAPI(this.device,which,cam);
         return await mtx.read();
     }
 

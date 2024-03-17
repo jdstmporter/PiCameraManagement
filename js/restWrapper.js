@@ -31,7 +31,8 @@ class MediaMTXAPI {
     #url(action = baseActions.READ) {
         switch (action) {
             case baseActions.READ:
-                return `${this.root}/get`;
+                let cam=(this.which===baseURLS.PATHS) ? this.name : '';
+                return `${this.root}/get/${cam}`;
             case baseActions.WRITE:
                 return `${this.root}/patch/${this.name}`;
             default:

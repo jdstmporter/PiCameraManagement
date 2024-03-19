@@ -2,11 +2,12 @@ import {PiCam} from '../picam/specifiers.js';
 export {PropertyField};
 class PropertyField {
 
-    constructor(field='') {
-        if(!PiCam.has(field)) { throw new Error('No such field'); }
-        this.parameters = PiCam.spec(field);
+    constructor(params,editable = true) {
+        this.parameters = params;
         this.field = null;
         this.callback = (v) => {};
+        this.name=params.name;
+        this.editable = editable;
 
     }
 
@@ -35,7 +36,10 @@ class PropertyField {
         }
     }
 
+
+
     get isValid() {
+        console.log(`Checking validity: ${this.kind} : ${this.value}`);
         switch(this.kind) {
             case 'int':
             case 'number':
@@ -72,16 +76,23 @@ class PropertyField {
                 );
                 break;
         }
-        this.field.name=name;
-        this.field.oninput = (ev) => {
-            if(this.isValid) {
-                this.field.setCustomValidity('');
-                this.callback(this.value);
-            }
-            else {
-                this.field.setCustomValidity('Invalid entry');
+        this.field.setAttribute('name',name);
+        this.field.disabled=!this.editable;
+        if(this.editable) {
+            this.field.disabled=true;
+            this.field.oninput = (ev) => {
+                console.log('On input fired');
+                if(this.isValid) {
+                    this.field.setCustomValidity('');
+                    this.callback(this.value);
+                }
+                else {
+                    this.field.setCustomValidity('Invalid entry');
+                    console.log(`Bad entry on ${name}`)
+                }
             }
         }
+
         return this.field;
     }
 }

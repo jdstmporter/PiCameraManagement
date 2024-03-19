@@ -1,4 +1,5 @@
 const path = require('path');
+const CWP = require('copy-webpack-plugin');
 
 module.exports = {
     entry: '/Users/julianporter/WebstormProjects/camera/js/index.js',
@@ -7,5 +8,17 @@ module.exports = {
         path: path.resolve(__dirname, 'dist'),
         clean: true,
     },
+    plugins: [
+        new CWP({
+            patterns: [{
+                from: './static',
+                to: '.'
+        }, {
+                from: './less',
+                to: '.',
+                filter: (path => /\.css$/.test(path))
+            }]
+        })
+    ],
     mode: 'development'
 };

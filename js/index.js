@@ -1,5 +1,5 @@
 //import {MediaMTXInstance} from './parser.js';
-import {PropertyField} from './gui/valueFields.js';
+import {TableRow} from './gui/tableRow.js';
  function start() {
     let IP = "192.168.0.132";
     let PORT = 9997;
@@ -7,14 +7,17 @@ import {PropertyField} from './gui/valueFields.js';
     let fields = ['rpiCameraWidth','rpiCameraHFlip','rpiCameraBrightness'];
     let items = fields.map( f => {
         console.log(`Making ${f}`);
-        return new PropertyField(f);
+        //return new PropertyField(f);
+        return new TableRow(f);
     });
 
-    let tag = document.getElementById('')
+    let tag = document.getElementById('inputs');
+    let table = document.createElement('table');
     items.forEach(i => {
-        i.map(`Field ${i}`);
-        document.body.appendChild(i.field);
+        let tag=i.map('default');
+        table.appendChild(tag);
     });
+    tag.appendChild(table);
 
     /*
     let m = new MediaMTXInstance(IP, PORT);

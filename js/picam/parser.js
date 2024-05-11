@@ -1,4 +1,4 @@
-import {MediaMTX} from './api.js';
+import {MediaMTX} from '../api.js';
 
 export {MediaMTXInstance };
 
@@ -7,11 +7,13 @@ class Property {
         this.def=def;
         this.current=current;
     }
+
+    toString() { `default=[${this.def}] current=[${this.current}]`; }
 }
 
 class MediaMTXInstance {
 
-    constructor(ip = '192.168.0.132', port = 9997) {
+    constructor(ip = '192.168.0.203', port = 9997) {
         this.ip = ip;
         this.port = port.toString();
         this.keys = [];

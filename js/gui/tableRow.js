@@ -24,15 +24,27 @@ class TableRow {
         this.parameters = PiCam.spec(field);
         this.fieldName = field;
         this.input = new PropertyField(this.parameters);
+        this.input.oninput = (ev) => {};
         this.current = null;
     }
 
-    map(defaultValue) {
-        this.defBox = TableRow.readonlyBox(defaultValue.toString(),'default');
+    get onchange() { return this.input.oninput(); }
+    set onchange(cb) { this.input.oninput=cb; }
+
+
+    get value() { return this.input.value; }
+    set value(v) { this.input.value=v; }
+
+    map(property) {
+        this.defBox = TableRow.readonlyBox(property.def.toString(),'default');
         this.descBox = TableRow.textBox(this.parameters.help,'help');
         this.inBox   = this.input.map('value');
+        this.reset   = document.createElement('button');
+        this.reset.appendChild(document.createTextNode('Revert'));
+        this.reset.setAttribute('type','button');
+        this.reset.onclick = (ev) => { this.value=defaultValue; };
 
-        let cells = [this.defBox,this.descBox,this.inBox].map ( cell => {
+        let cells = [this.defBox,this.descBox,this.inBox,this.reset].map ( cell => {
             let td = document.createElement('td');
             td.appendChild(cell);
             return td;
@@ -42,6 +54,7 @@ class TableRow {
         cells.forEach(cell => row.appendChild(cell));
         return row;
     }
+
 
 
 }

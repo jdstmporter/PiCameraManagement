@@ -1,19 +1,40 @@
 import {PiCam} from '../picam/specifiers.js';
 export {PropertyField};
+
+function isNull(x) { return x===null; }
+function isUndefined(x) { return x===undefined; }
+function isNullOrUndefined(x) { return isNull(x) || isUndefined(x); }
+
+
+
 class PropertyField {
 
     constructor(params,editable = true) {
         this.parameters = params;
         this.field = null;
-        this.callback = (v) => {};
+        this.oninput = (v) => {};
         this.name=params.name;
         this.editable = editable;
+        this.tempValue = null;
+        this.mapped = false;
 
+    }
+
+    #updateDOM() {
+        switch (this.kind) {
+            case 'bool':
+                this.field.checked = this.tempValue;
+                break;
+            default:
+                this.field.value = this.tempValue.toString();
+                break;
+        }
     }
 
     get kind() { return this.parameters.kind; }
 
     get value() {
+
         switch(this.kind) {
             case 'int':
                 return parseInt(this.field.value);
@@ -26,14 +47,8 @@ class PropertyField {
         }
     }
     set value(value) {
-        switch(this.kind) {
-            case 'bool':
-                this.field.checked=value;
-                break;
-            default:
-                this.field.value=value.toString();
-                break;
-        }
+        this.tempValue=value;
+        if(!isNull(this.field))  this.#updateDOM();
     }
 
 
@@ -51,7 +66,7 @@ class PropertyField {
 
 
 
-    map(name = ''){
+    map(value = '',name = ''){
         const kind = this.parameters.kind;
         switch(kind) {
             case 'bool':
@@ -84,7 +99,10 @@ class PropertyField {
                 console.log('On input fired');
                 if(this.isValid) {
                     this.field.setCustomValidity('');
-                    this.callback(this.value);
+                    let event = new InputEvent('input', {
+                        data : this.value
+                    });
+                    this.oninput(event);
                 }
                 else {
                     this.field.setCustomValidity('Invalid entry');
@@ -92,7 +110,7 @@ class PropertyField {
                 }
             }
         }
-
+        this.value=value;
         return this.field;
     }
 }

@@ -43,7 +43,9 @@ class Specifier {
 }
 
 
-class _PiCam {
+class PiCam {
+
+    static _self = undefined;
 
     constructor() {
         this.props=new Map();
@@ -52,16 +54,24 @@ class _PiCam {
             let [k,v] = kv;
             this.props.set(k,new Specifier(v));
         });
+        this._keys = [...this.props.keys()];
     }
 
-    has(key) { return this.props.has(key); }
-    spec(key) { return this.props.get(key); }
+    static keys() { return this.self()._keys; }
 
-    kind(key) { return this.spec(key).kind; }
-    help(key) { return this.spec(key).help; }
-    max(key) { return this.spec(key).max; }
-    min(key) { return this.spec(key).min; }
-    choices(key) { return this.spec(key).choices || []; }
+    static has(key) { return this.self().props.has(key); }
+    static spec(key) { return this.self().props.get(key); }
+
+    static kind(key) { return this.spec(key).kind; }
+    static help(key) { return this.spec(key).help; }
+    static max(key) { return this.spec(key).max; }
+    static min(key) { return this.spec(key).min; }
+    static choices(key) { return this.spec(key).choices || []; }
+
+    static self() {
+        if(PiCam._self===undefined) PiCam._self=new PiCam();
+        return PiCam._self;
+    }
 }
 
-const PiCam = new _PiCam();
+

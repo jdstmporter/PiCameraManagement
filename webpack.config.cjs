@@ -2,7 +2,7 @@ const path = require('path');
 const CWP = require('copy-webpack-plugin');
 
 module.exports = {
-    entry: '/Users/julianporter/WebstormProjects/camera/js/index.js',
+    entry: '/Users/julianporter/Developer/Webstorm/camera/js/index.js',
     output: {
         filename: 'index.js',
         path: path.resolve(__dirname, 'dist'),

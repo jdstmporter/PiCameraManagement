@@ -9,7 +9,7 @@ class HTTPRequests {
         return new Headers({
             "Connection": "keep-alive",
             "Content-Type": "application/json",
-            "Accept-Encoding": "gzip, deflate,  br"
+            "Accept-Encoding": "gzip, deflate, br"
         });
     }
 

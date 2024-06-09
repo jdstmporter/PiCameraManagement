@@ -1,4 +1,4 @@
-import {PiCam} from '../picam/specifiers.js';
+import {PiCam} from '../picam/structure/picam.js';
 export {PropertyField};
 
 function isNull(x) { return x===null; }
@@ -9,32 +9,67 @@ function isNullOrUndefined(x) { return isNull(x) || isUndefined(x); }
 
 class PropertyField {
 
-    constructor(params,editable = true) {
-        this.parameters = params;
-        this.field = null;
-        this.oninput = (v) => {};
-        this.name=params.name;
-        this.editable = editable;
-        this.tempValue = null;
-        this.mapped = false;
+    #valueToLoad
 
-    }
-
-    #updateDOM() {
-        switch (this.kind) {
+    static #makeField(params) {
+        const kind = params.kind;
+        let field;
+        switch(kind) {
             case 'bool':
-                this.field.checked = this.tempValue;
+                field=document.createElement('input');
+                field.type='checkbox';
+                break;
+            case 'int':
+            case 'number':
+                field=document.createElement('input');
+                field.type='number';
+                field.min=params.min;
+                field.max=params.max;
+                break;
+            case 'choose':
+                field=document.createElement('select');
+                field.multiple=false;
+                params.choices.forEach (v => {
+                        let o = document.createElement('option');
+                        o.text=v;
+                        field.add(o);
+                    }
+                );
                 break;
             default:
-                this.field.value = this.tempValue.toString();
+                field=document.createElement('input');
+                field.type='text';
                 break;
         }
+        field.setAttribute('name',params.name);
+        return field;
+    }
+
+    constructor(params, value) {
+        this.parameters = params;
+        this.name=params.name;
+        this.field = PropertyField.#makeField(params);
+        this.oninput = (v) => {};
+
+        this.#valueToLoad = value;
+
+        this.field.oninput = (ev) => {
+            console.log('On input fired');
+            if(this.isValid) {
+                this.field.setCustomValidity('');
+                this.oninput(this.value);
+            }
+            else {
+                this.field.setCustomValidity('Invalid entry');
+                console.log(`Bad entry on ${name}`)
+            }
+        }
+        this.value=value;
     }
 
     get kind() { return this.parameters.kind; }
 
     get value() {
-
         switch(this.kind) {
             case 'int':
                 return parseInt(this.field.value);
@@ -47,8 +82,14 @@ class PropertyField {
         }
     }
     set value(value) {
-        this.tempValue=value;
-        if(!isNull(this.field))  this.#updateDOM();
+        switch (this.kind) {
+            case 'bool':
+                this.field.checked = value;
+                break;
+            default:
+                this.field.value = value;
+                break;
+        }
     }
 
 
@@ -66,51 +107,5 @@ class PropertyField {
 
 
 
-    map(value = '',name = ''){
-        const kind = this.parameters.kind;
-        switch(kind) {
-            case 'bool':
-                this.field=document.createElement('input');
-                this.field.type='checkbox';
-                break;
-            case 'int':
-            case 'number':
-                this.field=document.createElement('input');
-                this.field.type='number';
-                this.field.min=this.parameters.min;
-                this.field.max=this.parameters.max;
-                break;
-            case 'choose':
-                this.field=document.createElement('select');
-                this.field.multiple=false;
-                this.parameters.choices.forEach (v => {
-                        let o = document.createElement('option');
-                        o.text=v;
-                        this.field.add(o);
-                    }
-                );
-                break;
-        }
-        this.field.setAttribute('name',name);
-        this.field.disabled=!this.editable;
-        if(this.editable) {
-            this.field.disabled=true;
-            this.field.oninput = (ev) => {
-                console.log('On input fired');
-                if(this.isValid) {
-                    this.field.setCustomValidity('');
-                    let event = new InputEvent('input', {
-                        data : this.value
-                    });
-                    this.oninput(event);
-                }
-                else {
-                    this.field.setCustomValidity('Invalid entry');
-                    console.log(`Bad entry on ${name}`)
-                }
-            }
-        }
-        this.value=value;
-        return this.field;
-    }
+
 }

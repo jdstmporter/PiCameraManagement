@@ -1,11 +1,10 @@
 import {ApplicationGUI} from './gui/applicationGUI.js';
+import {PiCam} from "./picam/structure/picam.js";
 
+const defaultFields = [];
 
 function start() {
-    let IP = "192.168.0.203";
-    let PORT = 9997;
-
-    let appGUI = new ApplicationGUI(IP, PORT);
+    let appGUI = new ApplicationGUI();
     appGUI.load().then( v => {
         console.log('GUI loaded')
     });

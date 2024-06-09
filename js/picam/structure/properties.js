@@ -1,4 +1,4 @@
-export {PiCamSettings};
+export {PiCamSettings, Modes};
 
 const PiCamSettings = {
 //    rpiCameraCamID: ['int', 0, 256],
@@ -22,3 +22,35 @@ const PiCamSettings = {
     rpiCameraAfSpeed: ['choose', ['normal', 'fast'], 'autofocus speed'],
     rpiCameraLensPosition: ['number', [0.0, 256.0], 'lens position (1 / distance to object)']
 };
+
+class Modes {
+    static Normal = new Modes('Normal');
+    static Advanced = new Modes('Advanced');
+
+    static #modeKeys  = {
+        Normal: [
+            'rpiCameraWidth',
+            'rpiCameraHeight',
+            'rpiCameraBrightness',
+            'rpiCameraContrast',
+            'rpiCameraSaturation',
+            'rpiCameraSaturation',
+            'rpiCameraAWB',
+            'rpiCameraAfMode',
+            'rpiCameraLensPosition'
+        ],
+        Advanced: Object.keys(PiCamSettings)
+    }
+
+    static all() { return [this.Normal, this.Advanced]; }
+
+    constructor(name) {
+        this.name=name;
+    }
+
+    toString() { return `Mode.${this.name}`; }
+
+    get keys() {
+        return Modes.#modeKeys[this.name];
+    }
+}

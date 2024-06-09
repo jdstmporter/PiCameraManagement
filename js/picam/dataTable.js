@@ -1,31 +1,78 @@
 
-import { PiCam } from './specifiers.js';
-import {MediaMTXInstance} from "./parser.js";
+import { PiCam } from './structure/picam.js';
+import {MediaMTXInstance, Property} from "./parser.js";
 import {TableRow} from "../gui/tableRow.js";
 
-export { PiDataSet };
+export { PiPropertyValues };
 
+class PropertyState {
+    #key;
+    #edited;
+    #default;
+    #current;
+    #modified;
 
-class PiDataSet {
+    constructor(key,property) {
+        this.#key = key;
+        this.#default = property.def;
+        this.#current = property.current;
+        this.#edited = this.#current;
+        this.#modified = false;
+    }
+    get key() { return this.#key; }
+    get isModified() { return this.#modified; }
 
-    constructor(ip = '192.168.0.132', port=9997,keys = []) {
-        this.keys = (keys.length===0) ? PiCam.keys : keys;
+    get editedValue() { return this.#edited; }
+    set editedValue(value) {
+        this.#edited = value;
+        this.#modified = true;
+    }
+
+    get currentValue() { return this.#current; }
+    get defaultValue() { return this.#default; }
+
+    toDefault() {
+        this.#edited = this.#default;
+        this.#modified = true;
+    }
+
+    toCurrent() {
+        this.#edited = this.#current;
+        this.#modified = false;
+    }
+1
+
+    commit() {
+        this.#current = this.#edited;
+        this.#modified = false;
+        return new Property(this.defaultValue, this.currentValue);
+    }
+}
+
+class PiPropertyValues {
+
+    constructor(ip, port) {
         this.mtx = new MediaMTXInstance(ip,port);
-        this.fields=new Map();
-        this.keys.forEach( k => this.fields.set(k,PiCam.spec(k)));
     }
 
     async load() {
         await this.mtx.initialise();
+        return PiCam.allKeys().map( key => {
+            let property = this.mtx.get(key);
+            return new PropertyState(key,property);
+        });
     }
 
-    has(key) { return this.keys.includes(key); }
-    specifier(key) { return this.fields.get(key); }
-    defaultValue(key) { return this.mtx.get(key).def; }
-    getCurrentValue(key) { return this.mtx.get(key).current; }
-    setCurrentValue(key,value) { this.mtx.set(key,value); }
-    reset(key) { this.mtx.reset(key); }
-    resetAll() { this.mtx.resetAll(); }
+    save(states = []) {
+        let changed = states.filter(state => state.isModified);
+        let output = {};
+        changed.forEach( state => {
+            output[state.key] = state.commit();
+        });
+    }
+
+
+
 
 
 

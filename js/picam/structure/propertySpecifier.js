@@ -1,7 +1,7 @@
 import {PiCamSettings} from './properties.js';
-export {PiCam};
+export {PropertySpecifier};
 
-class Specifier {
+class PropertySpecifier {
     constructor(args = []) {
         this.kind = args[0] || '';
         this.help = args[args.length-1] || '';
@@ -40,38 +40,18 @@ class Specifier {
                 return `${this.kind} [${this.help}] : ${this.min}-${this.max}`
         }
     }
-}
 
+    static keys() {
+        return Object.keys(PiCamSettings);
+    }
 
-class PiCam {
+    static load() {
 
-    static _self = undefined;
-
-    constructor() {
-        this.props=new Map();
-
-        Object.entries(PiCamSettings).forEach(kv => {
-            let [k,v] = kv;
-            this.props.set(k,new Specifier(v));
+        let props=new Map();
+        Object.keys(PiCamSettings).forEach(key => {
+                props.set(key,new PropertySpecifier(PiCamSettings[key]));
         });
-        this._keys = [...this.props.keys()];
-    }
-
-    static keys() { return this.self()._keys; }
-
-    static has(key) { return this.self().props.has(key); }
-    static spec(key) { return this.self().props.get(key); }
-
-    static kind(key) { return this.spec(key).kind; }
-    static help(key) { return this.spec(key).help; }
-    static max(key) { return this.spec(key).max; }
-    static min(key) { return this.spec(key).min; }
-    static choices(key) { return this.spec(key).choices || []; }
-
-    static self() {
-        if(PiCam._self===undefined) PiCam._self=new PiCam();
-        return PiCam._self;
+        return props;
     }
 }
-
 

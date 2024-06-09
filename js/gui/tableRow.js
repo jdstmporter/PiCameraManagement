@@ -1,5 +1,5 @@
 import { PropertyField } from './valueFields.js';
-import {PiCam} from "../picam/specifiers.js";
+import {PiCam} from "../picam/structure/picam.js";
 
 export { TableRow }
 
@@ -19,32 +19,54 @@ class TableRow {
         return box;
     }
 
-    constructor(field = '') {
+    static button(message, name='') {
+        let button = document.createElement('button');
+        button.appendChild(document.createTextNode(message));
+        button.setAttribute('type','button');
+        button.setAttribute('name',name);
+        return button;
+    }
+
+    constructor(state) {
+        let field = state.key || ""
         if(!PiCam.has(field)) { throw new Error('No such field'); }
         this.parameters = PiCam.spec(field);
         this.fieldName = field;
-        this.input = new PropertyField(this.parameters);
-        this.input.oninput = (ev) => {};
-        this.current = null;
+        this.state = state;
+
+
     }
 
     get onchange() { return this.input.oninput(); }
-    set onchange(cb) { this.input.oninput=cb; }
+    //set onchange(cb) { this.input.oninput=cb; }
 
 
     get value() { return this.input.value; }
     set value(v) { this.input.value=v; }
 
-    map(property) {
-        this.defBox = TableRow.readonlyBox(property.def.toString(),'default');
-        this.descBox = TableRow.textBox(this.parameters.help,'help');
-        this.inBox   = this.input.map('value');
-        this.reset   = document.createElement('button');
-        this.reset.appendChild(document.createTextNode('Revert'));
-        this.reset.setAttribute('type','button');
-        this.reset.onclick = (ev) => { this.value=defaultValue; };
+    #reload() {
+        this.input.value=this.state.currentValue;
+    }
 
-        let cells = [this.defBox,this.descBox,this.inBox,this.reset].map ( cell => {
+    map() {
+        this.defBox = TableRow.readonlyBox(this.state.defaultValue.toString(),'default');
+        this.descBox = TableRow.textBox(this.parameters.help,'help');
+        this.inBox   = this.input.map(this.state.currentValue);
+        this.resetD   = TableRow.button('To default','defButton');
+        this.resetD.onclick = (ev) => {
+            this.state.toDefault();
+            this.#reload();
+        };
+
+        this.resetC   = TableRow.button('To current','currButton');
+        this.resetC.onclick = (ev) => {
+            this.state.toCurrent();
+            this.#reload();
+        };
+        this.input = new PropertyField(this.parameters,this.state.editedValue);
+        this.input.oninput = (value) => { this.state.editedValue = value; };
+
+        let cells = [this.defBox,this.descBox,this.inBox,this.resetD, this.resetC].map ( cell => {
             let td = document.createElement('td');
             td.appendChild(cell);
             return td;

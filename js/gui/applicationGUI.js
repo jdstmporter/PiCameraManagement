@@ -3,30 +3,41 @@ import {TableRow} from "./tableRow.js";
 
 export {ApplicationGUI};
 
-import {MediaMTXInstance} from '../picam/parser.js';
-import {PiCam} from "../picam/specifiers.js";
+import {PiPropertyValues} from '../picam/dataTable.js';
+import {PiCam} from "../picam/structure/picam.js";
+import {Defaults} from "../defaults/defaults.js";
 
 class ApplicationGUI {
 
+    constructor() {
+        this.IP = Defaults.IP_ADDRESS;
+        this.PORT = Defaults.PORT;
 
+        this.properties = new PiPropertyValues(this.IP,this.PORT);
+        this.rows = {};
 
-
-
-    constructor(IP = '192.168.0.203', PORT = 9997) {
-        this.IP = IP;
-        this.PORT = PORT;
-        this.mtx = null;
         this.tag = document.getElementById('inputs');
-        console.log(`PICAM is [${PiCam.self()}]`)
-        this.fields = PiCam.keys(); //['rpiCameraWidth','rpiCameraHFlip','rpiCameraBrightness'];
+        console.log(`PICAM is [${PiCam}]`);
     }
 
     async load() {
-        this.mtx = new MediaMTXInstance(this.IP, this.PORT);
-        await this.mtx.initialise();
+
+        let states = await this.properties.load();
+        this.rows = {};
+        states.forEach(state => {
+            let row = new TableRow(state);
+            row.map();
+            this.rows[row.fieldName] = row;
+        });
         this.render();
 
 
+    }
+
+    get mode() { return PiCam.mode; }
+    set mode(value) {
+        PiCam.mode=value;
+        self.render();
     }
 
     render() {
@@ -35,13 +46,7 @@ class ApplicationGUI {
         }
 
         let table = document.createElement('table');
-        this.fields.forEach( f => {
-            let row = new TableRow(f);
-            let property = this.mtx.get(f);
-            console.log(`${f} : ${property.toString()}`);
-            table.appendChild(row.map(property));
-        });
+        PiCam.keys().forEach( key => table.appendChild(this.rows[key]));
         this.tag.appendChild(table);
-
     }
 }

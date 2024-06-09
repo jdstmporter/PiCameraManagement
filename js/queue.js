@@ -10,7 +10,7 @@ class MessageQueue {
     }
 
     listen(listener,callback = NullCallback) {
-        l.addEventListener(this.name,callback,false);
+        listener.addEventListener(this.name,callback,false);
         this.listeners.push(listener);
     }
 

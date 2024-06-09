@@ -1,7 +1,7 @@
 import { PropertyField } from './valueFields.js';
 import {PiCam} from "../picam/structure/picam.js";
 
-export { TableRow }
+export { TableRow };
 
 class TableRow {
 
@@ -19,6 +19,12 @@ class TableRow {
         return box;
     }
 
+    /**
+     *
+     * @param {string} message
+     * @param {string} name
+     * @returns {HTMLButtonElement}
+     */
     static button(message, name='') {
         let button = document.createElement('button');
         button.appendChild(document.createTextNode(message));
@@ -28,7 +34,7 @@ class TableRow {
     }
 
     constructor(state) {
-        let field = state.key || ""
+        let field = state.key || "";
         if(!PiCam.has(field)) { throw new Error('No such field'); }
         this.parameters = PiCam.spec(field);
         this.fieldName = field;
@@ -72,7 +78,7 @@ class TableRow {
             return td;
         });
         let row = document.createElement('tr');
-        row.setAttribute('name',this.fieldName)
+        row.setAttribute('name',this.fieldName);
         cells.forEach(cell => row.appendChild(cell));
         return row;
     }

@@ -23,19 +23,19 @@ class MediaMTX {
     }
 
     async getDefaults() {
-        return await this.get(baseURLS.DEFAULTS)
+        return await this.get(baseURLS.DEFAULTS);
     }
 
     async getPaths(){
-        return await this.get(baseURLS.PATHS)
+        return await this.get(baseURLS.PATHS);
     }
 
     async getGlobal(){
-        return await this.get(baseURLS.GLOBAL)
+        return await this.get(baseURLS.GLOBAL);
     }
 
     async setPath(values = {}){
-        return await this.set(baseURLS.PATHS, values)
+        return await this.set(baseURLS.PATHS, values);
     }
 
 

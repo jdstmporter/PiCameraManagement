@@ -1,5 +1,5 @@
 
-import {PropertySpecifier} from './propertySpecifier.js'
+import {PropertySpecifier} from './propertySpecifier.js';
 import {Modes} from "./properties.js";
 export {PiCam};
 

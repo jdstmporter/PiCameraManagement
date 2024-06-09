@@ -37,7 +37,7 @@ class PropertySpecifier {
             case 'bool':
                 return `${this.kind} [${this.help}]`;
             default:
-                return `${this.kind} [${this.help}] : ${this.min}-${this.max}`
+                return `${this.kind} [${this.help}] : ${this.min}-${this.max}`;
         }
     }
 

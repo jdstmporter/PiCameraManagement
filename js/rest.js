@@ -5,6 +5,10 @@ class HTTPRequests {
 
     constructor() {}
 
+    /**
+     *
+     * @returns {Headers}
+     */
     headers() {
         return new Headers({
             "Connection": "keep-alive",
@@ -13,6 +17,11 @@ class HTTPRequests {
         });
     }
 
+    /**
+     *
+     * @param {string} method
+     * @returns {object}
+     */
     options(method = "GET") {
         let accept = (method === "POST") ? "application/json" : "*/*";
         let hdr = this.headers();
@@ -25,6 +34,12 @@ class HTTPRequests {
         };
     }
 
+    /**
+     *
+     * @param {string} url
+     * @param {object} options
+     * @returns {Promise<any>}
+     */
     async handle(url, options) {
         const response = await fetch(url, options);
         if (!response.ok) {
@@ -33,11 +48,22 @@ class HTTPRequests {
         return response.json();
     }
 
+    /**
+     *
+     * @param {string} url
+     * @returns {Promise<*>}
+     */
     async get(url) {
         let opts = this.options("GET");
         return await this.handle(url, opts);
     }
 
+    /**
+     *
+     * @param {string} url
+     * @param {object} data
+     * @returns {Promise<*>}
+     */
     async patch(url, data) {
         let opts = this.options("PATCH");
         opts.body = JSON.stringify(data);

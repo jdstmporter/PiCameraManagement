@@ -54,16 +54,16 @@ class PropertyField {
         this.#valueToLoad = value;
 
         this.field.oninput = (ev) => {
-            console.log('On input fired');
+            window.console.log('On input fired');
             if(this.isValid) {
                 this.field.setCustomValidity('');
                 this.oninput(this.value);
             }
             else {
                 this.field.setCustomValidity('Invalid entry');
-                console.log(`Bad entry on ${name}`)
+                window.console.log(`Bad entry on ${name}`);
             }
-        }
+        };
         this.value=value;
     }
 
@@ -95,7 +95,7 @@ class PropertyField {
 
 
     get isValid() {
-        console.log(`Checking validity: ${this.kind} : ${this.value}`);
+        window.console.log(`Checking validity: ${this.kind} : ${this.value}`);
         switch(this.kind) {
             case 'int':
             case 'number':

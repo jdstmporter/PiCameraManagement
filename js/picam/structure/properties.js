@@ -40,7 +40,7 @@ class Modes {
             'rpiCameraLensPosition'
         ],
         Advanced: Object.keys(PiCamSettings)
-    }
+    };
 
     static all() { return [this.Normal, this.Advanced]; }
 

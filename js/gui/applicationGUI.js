@@ -17,7 +17,7 @@ class ApplicationGUI {
         this.rows = {};
 
         this.tag = document.getElementById('inputs');
-        console.log(`PICAM is [${PiCam}]`);
+        window.console.log(`PICAM is [${PiCam}]`);
     }
 
     async load() {
@@ -37,7 +37,7 @@ class ApplicationGUI {
     get mode() { return PiCam.mode; }
     set mode(value) {
         PiCam.mode=value;
-        self.render();
+        this.render();
     }
 
     render() {

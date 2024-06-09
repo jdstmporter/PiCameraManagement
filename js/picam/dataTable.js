@@ -12,6 +12,11 @@ class PropertyState {
     #current;
     #modified;
 
+    /**
+     *
+     * @param {string} key
+     * @param {Property} property
+     */
     constructor(key,property) {
         this.#key = key;
         this.#default = property.def;
@@ -19,10 +24,29 @@ class PropertyState {
         this.#edited = this.#current;
         this.#modified = false;
     }
+
+    /**
+     *
+     * @returns {string}
+     */
     get key() { return this.#key; }
+
+    /**
+     *
+     * @returns {boolean}
+     */
     get isModified() { return this.#modified; }
 
+    /**
+     *
+      * @returns {any}
+     */
     get editedValue() { return this.#edited; }
+
+    /**
+     *
+     * @param {any} value
+     */
     set editedValue(value) {
         this.#edited = value;
         this.#modified = true;
@@ -31,7 +55,7 @@ class PropertyState {
     get currentValue() { return this.#current; }
     get defaultValue() { return this.#default; }
 
-    toDefault() {
+    toDefault(){
         this.#edited = this.#default;
         this.#modified = true;
     }
@@ -51,6 +75,11 @@ class PropertyState {
 
 class PiPropertyValues {
 
+    /**
+     *
+     * @param {string} ip
+     * @param {string} port
+     */
     constructor(ip, port) {
         this.mtx = new MediaMTXInstance(ip,port);
     }

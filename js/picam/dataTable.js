@@ -84,9 +84,14 @@ class PiPropertyValues {
         this.mtx = new MediaMTXInstance(ip,port);
     }
 
-    async load() {
+    /**
+     *
+     * @param {Modes} mode
+     * @returns {Promise<*>}
+     */
+    async load(mode) {
         await this.mtx.initialise();
-        return PiCam.allKeys().map( key => {
+        return PiCam.keys(mode).map( key => {
             let property = this.mtx.get(key);
             return new PropertyState(key,property);
         });

@@ -16,9 +16,13 @@ module.exports = {
         }, {
                 from: './less',
                 to: '.',
-                filter: (path => /\.css$/.test(path))
+                filter: (path => /\.css(\.map)?$/.test(path))
             }]
         })
     ],
-    mode: 'development'
+    mode: 'development',
+    devtool: 'inline-source-map',
+    devServer: {
+        static: './dist',
+    },
 };

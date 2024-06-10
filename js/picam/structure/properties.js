@@ -27,7 +27,7 @@ class Modes {
     static Normal = new Modes('Normal');
     static Advanced = new Modes('Advanced');
 
-    static #modeKeys  = {
+    static modeKeys  = {
         Normal: [
             'rpiCameraWidth',
             'rpiCameraHeight',
@@ -51,6 +51,6 @@ class Modes {
     toString() { return `Mode.${this.name}`; }
 
     get keys() {
-        return Modes.#modeKeys[this.name];
+        return Modes.modeKeys[this.name];
     }
 }

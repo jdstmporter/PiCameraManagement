@@ -1,21 +1,19 @@
 import { PropertyField } from './valueFields.js';
 import {PiCam} from "../picam/structure/picam.js";
+import {DOM} from "./dom.js";
 
 export { TableRow };
 
 class TableRow {
 
     static textBox(text='',name='text') {
-        let box = document.createElement('span');
-        box.appendChild(document.createTextNode(text));
-        box.setAttribute('name',name);
+        let box = new DOM('span').text(text).setAttr('name',name);
         return box;
     }
     static readonlyBox(value,name='') {
-        let box = document.createElement('input');
-        box.disabled=true;
-        box.value=value.toString();
-        box.setAttribute('name',name);
+        let box = new DOM('input');
+        box.setProp('disabled',true).setProp('value',value.toString());
+        box.setAttr('name',name);
         return box;
     }
 
@@ -23,26 +21,29 @@ class TableRow {
      *
      * @param {string} message
      * @param {string} name
-     * @returns {HTMLButtonElement}
+     * @returns {DOM}
      */
     static button(message, name='') {
-        let button = document.createElement('button');
-        button.appendChild(document.createTextNode(message));
-        button.setAttribute('type','button');
-        button.setAttribute('name',name);
+        let button = new DOM('button');
+        button.text(message).setAttr('type','button').setAttr('name',name);
         return button;
     }
 
     constructor(state) {
         let field = state.key || "";
-        if(!PiCam.has(field)) { throw new Error('No such field'); }
+        if(!PiCam.has(field)) { throw new Error(`No such field as ${field}`); }
         this.parameters = PiCam.spec(field);
         this.fieldName = field;
         this.state = state;
-
-
+        this.dom=this.map();
     }
 
+
+
+    /**
+     * @desc Callback
+     * @returns {*}
+     */
     get onchange() { return this.input.oninput(); }
     //set onchange(cb) { this.input.oninput=cb; }
 
@@ -57,29 +58,32 @@ class TableRow {
     map() {
         this.defBox = TableRow.readonlyBox(this.state.defaultValue.toString(),'default');
         this.descBox = TableRow.textBox(this.parameters.help,'help');
-        this.inBox   = this.input.map(this.state.currentValue);
+
+        this.input = new PropertyField(this.parameters,this.state.editedValue);
+        this.input.oninput = (value) => { this.state.editedValue = value; };
+
+        this.inBox   = new DOM(this.input.field);
+
         this.resetD   = TableRow.button('To default','defButton');
-        this.resetD.onclick = (ev) => {
+        this.resetD.dom.onclick = (ev) => {
             this.state.toDefault();
             this.#reload();
         };
 
         this.resetC   = TableRow.button('To current','currButton');
-        this.resetC.onclick = (ev) => {
+        this.resetC.dom.onclick = (ev) => {
             this.state.toCurrent();
             this.#reload();
         };
-        this.input = new PropertyField(this.parameters,this.state.editedValue);
-        this.input.oninput = (value) => { this.state.editedValue = value; };
+
 
         let cells = [this.defBox,this.descBox,this.inBox,this.resetD, this.resetC].map ( cell => {
-            let td = document.createElement('td');
-            td.appendChild(cell);
+            let td = new DOM('td').append(cell);
             return td;
         });
-        let row = document.createElement('tr');
-        row.setAttribute('name',this.fieldName);
-        cells.forEach(cell => row.appendChild(cell));
+        let row = new DOM('tr'); //document.createElement('tr');
+        row.setAttr('name',this.fieldName);
+        cells.forEach(cell => row.append(cell));
         return row;
     }
 

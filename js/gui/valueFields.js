@@ -9,9 +9,9 @@ function isNullOrUndefined(x) { return isNull(x) || isUndefined(x); }
 
 class PropertyField {
 
-    #valueToLoad
 
-    static #makeField(params) {
+
+    static makeField(params) {
         const kind = params.kind;
         let field;
         switch(kind) {
@@ -48,10 +48,10 @@ class PropertyField {
     constructor(params, value) {
         this.parameters = params;
         this.name=params.name;
-        this.field = PropertyField.#makeField(params);
+        this.field = PropertyField.makeField(params);
         this.oninput = (v) => {};
 
-        this.#valueToLoad = value;
+        this.valueToLoad = value;
 
         this.field.oninput = (ev) => {
             window.console.log('On input fired');

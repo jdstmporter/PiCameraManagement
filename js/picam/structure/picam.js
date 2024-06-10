@@ -8,17 +8,16 @@ class _PiCam {
 
     constructor() {
         this.props = PropertySpecifier.load();
-        this.mode = Modes.Normal;
     }
 
     allKeys() { return [...this.props.keys()]; }
 
-    keys() {
-        return this.mode.keys;
+    keys(mode = Modes.Normal) {
+        return mode.keys;
     }
 
-    has(key) {
-        return this.keys().includes(key);
+    has(key,mode = Modes.Advanced) {
+        return this.keys(mode).includes(key);
     }
 
     spec(key) {

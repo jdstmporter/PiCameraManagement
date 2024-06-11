@@ -1,4 +1,5 @@
 import {PiCam} from '../picam/structure/picam.js';
+import {DOM} from "./dom.js";
 export {PropertyField};
 
 function isNull(x) { return x===null; }
@@ -16,32 +17,37 @@ class PropertyField {
         let field;
         switch(kind) {
             case 'bool':
-                field=document.createElement('input');
-                field.type='checkbox';
+                field=new DOM('input',{
+                    type: 'checkbox'
+                });
                 break;
             case 'int':
             case 'number':
-                field=document.createElement('input');
-                field.type='number';
-                field.min=params.min;
-                field.max=params.max;
+                field=new DOM('input', {
+                    type: 'number',
+                    min: params.min,
+                    max: params.max
+                });
                 break;
             case 'choose':
-                field=document.createElement('select');
-                field.multiple=false;
+                field=new DOM('select',{
+                    multiple: false
+                });
                 params.choices.forEach (v => {
-                        let o = document.createElement('option');
-                        o.text=v;
+                        let o = new DOM('option',{
+                            text: v
+                        });
                         field.add(o);
                     }
                 );
                 break;
             default:
-                field=document.createElement('input');
-                field.type='text';
+                field=new DOM('input', {
+                    type: 'text'
+                });
                 break;
         }
-        field.setAttribute('name',params.name);
+        field.setAttr('name',params.name);
         return field;
     }
 
@@ -84,10 +90,10 @@ class PropertyField {
     set value(value) {
         switch (this.kind) {
             case 'bool':
-                this.field.checked = value;
+                this.field.checked=value;
                 break;
             default:
-                this.field.value = value;
+                this.field.value=value;
                 break;
         }
     }

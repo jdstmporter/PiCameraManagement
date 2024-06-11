@@ -2,14 +2,14 @@
 <project version="4">
   <component name="ProjectTasksOptions">
     <TaskOptions isEnabled="true">
-      <option name="arguments" value="$FileName$ $FileNameWithoutExtension$.css --source-map" />
+      <option name="arguments" value="styles.less styles.css --source-map" />
       <option name="checkSyntaxErrors" value="true" />
       <option name="description" />
       <option name="exitCodeBehavior" value="ALWAYS" />
       <option name="fileExtension" value="less" />
       <option name="immediateSync" value="true" />
       <option name="name" value="Less" />
-      <option name="output" value="$FileNameWithoutExtension$.css:$FileNameWithoutExtension$.css.map" />
+      <option name="output" value="styles.css:styles.css.map" />
       <option name="outputFilters">
         <array>
           <FilterInfo>
@@ -24,10 +24,10 @@
       <option name="runOnExternalChanges" value="true" />
       <option name="scopeName" value="Project Files" />
       <option name="trackOnlyRoot" value="false" />
-      <option name="workingDir" value="$FileDir$" />
+      <option name="workingDir" value="$PROJECT_DIR$/less" />
       <envs />
     </TaskOptions>
-    <TaskOptions isEnabled="true">
+    <TaskOptions isEnabled="false">
       <option name="arguments" value="$FileName$ $FileNameWithoutExtension$.css --source-map" />
       <option name="checkSyntaxErrors" value="true" />
       <option name="description" />

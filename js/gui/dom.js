@@ -14,14 +14,16 @@ class DOM {
     /**
      *
      * @param {string|HTMLElement }tag
+     * @param {object} props
      */
-    constructor(tag) {
+    constructor(tag, props = {}) {
         if(typeof(tag)==='string') {
             this.element = document.createElement(tag);
         }
         else {
            this.element=tag;
         }
+        this.setProps(props);
     }
 
     get dom() { return this.element; }
@@ -65,10 +67,32 @@ class DOM {
         return this;
     }
 
+    setAttrs(kv) {
+        Object.keys(kv).forEach(key => this.element.setAttr(key,kv[key]));
+        return this;
+    }
+
+    /**
+     *
+     * @param {string} name
+     * @param {any} value
+     * @returns {DOM}
+     */
     setProp(name,value) {
         this.element[name]=value;
         return this;
     }
+
+    /**
+     *
+     * @param {object} kv
+     * @return {DOM}
+     */
+    setProps(kv) {
+        Object.keys(kv).forEach(key => this.element[key]=kv[key]);
+        return this;
+    }
+
     getProp(name) {
         return this.element[name];
     }
@@ -76,4 +100,7 @@ class DOM {
     set [name](value) { this.element[name]=value; }
     get [name]() { return this.element[name]; }
 
+
+
 }
+

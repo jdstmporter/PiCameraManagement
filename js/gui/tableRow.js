@@ -7,14 +7,15 @@ export { TableRow };
 class TableRow {
 
     static textBox(text='',name='text') {
-        let box = new DOM('span').text(text).setAttr('name',name);
-        return box;
+        return new DOM('span')
+            .text(text)
+            .setAttr('name',name);
     }
     static readonlyBox(value,name='') {
-        let box = new DOM('input');
-        box.setProp('disabled',true).setProp('value',value.toString());
-        box.setAttr('name',name);
-        return box;
+        return new DOM('input',{
+                disabled :true,
+                value: value.toString()
+            }).setAttr('name',name);
     }
 
     /**
@@ -24,9 +25,12 @@ class TableRow {
      * @returns {DOM}
      */
     static button(message, name='') {
-        let button = new DOM('button');
-        button.text(message).setAttr('type','button').setAttr('name',name);
-        return button;
+        return new DOM('button')
+            .text(message)
+            .setAttrs({
+                type: 'button',
+                name: name
+            });
     }
 
     constructor(state) {
@@ -62,27 +66,25 @@ class TableRow {
         this.input = new PropertyField(this.parameters,this.state.editedValue);
         this.input.oninput = (value) => { this.state.editedValue = value; };
 
-        this.inBox   = new DOM(this.input.field);
+        this.inBox  = this.input.field;
 
         this.resetD   = TableRow.button('To default','defButton');
-        this.resetD.dom.onclick = (ev) => {
+        this.resetD.onclick = (ev) => {
             this.state.toDefault();
             this.#reload();
         };
 
         this.resetC   = TableRow.button('To current','currButton');
-        this.resetC.dom.onclick = (ev) => {
+        this.resetC.onclick = (ev) => {
             this.state.toCurrent();
             this.#reload();
         };
 
 
         let cells = [this.defBox,this.descBox,this.inBox,this.resetD, this.resetC].map ( cell => {
-            let td = new DOM('td').append(cell);
-            return td;
+            return new DOM('td').append(cell);
         });
-        let row = new DOM('tr'); //document.createElement('tr');
-        row.setAttr('name',this.fieldName);
+        let row = new DOM('tr').setAttr('name',this.fieldName);
         cells.forEach(cell => row.append(cell));
         return row;
     }

@@ -63,22 +63,21 @@ class TableRow {
         this.defBox = TableRow.readonlyBox(this.state.defaultValue.toString(),'default');
         this.descBox = TableRow.textBox(this.parameters.help,'help');
 
-        this.input = new PropertyField(this.parameters,this.state.editedValue);
+        this.input = new PropertyField(this.fieldName,this.parameters,this.state.editedValue);
         this.input.oninput = (value) => { this.state.editedValue = value; };
-
         this.inBox  = this.input.field;
 
         this.resetD   = TableRow.button('To default','defButton');
-        this.resetD.onclick = (ev) => {
+        this.resetD.setProp('onclick', (ev) => {
             this.state.toDefault();
             this.#reload();
-        };
+        });
 
         this.resetC   = TableRow.button('To current','currButton');
-        this.resetC.onclick = (ev) => {
+        this.resetC.setProp('onclick', (ev) => {
             this.state.toCurrent();
             this.#reload();
-        };
+        });
 
 
         let cells = [this.defBox,this.descBox,this.inBox,this.resetD, this.resetC].map ( cell => {

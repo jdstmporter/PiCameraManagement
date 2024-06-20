@@ -61,7 +61,7 @@ class ApplicationGUI {
         let table = new DOM('table');
         let headerRow = new DOM('tr');
         ApplicationGUI.Headers.forEach( text => {
-            let th = new DOM('th').text(text);
+            let th = new DOM('th').text(text).setAttr('empty',text==='');
             headerRow.append(th);
         });
         table.append(headerRow);

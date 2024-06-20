@@ -3,10 +3,23 @@
 #inputs {
 
   table {
-    border-color: black;
-    input {
-      background-color: white;
+    border-collapse: collapse;
+    border: 1px solid black;
+    td, th {
+      border: 1px solid black;
+      padding: 0 4px 0 4px;
+      input {
+        background-color: white;
+        margin-bottom: 2px;
+      }
     }
+    th {
+      text-align: center;
+      &[empty=true] {
+        border-width: 0;
+      }
+    }
+
   }
 
 

@@ -37,7 +37,7 @@ class PropertyField {
                         let o = new DOM('option',{
                             text: v
                         });
-                        field.add(o);
+                        field.append(o);
                     }
                 );
                 break;
@@ -51,25 +51,25 @@ class PropertyField {
         return field;
     }
 
-    constructor(params, value) {
+    constructor(name, params, value) {
         this.parameters = params;
-        this.name=params.name;
+        this.name=name;
         this.field = PropertyField.makeField(params);
         this.oninput = (v) => {};
 
         this.valueToLoad = value;
 
-        this.field.oninput = (ev) => {
+        this.field.setProp('oninput', (ev) => {
             window.console.log('On input fired');
             if(this.isValid) {
-                this.field.setCustomValidity('');
+                this.field.validity();
                 this.oninput(this.value);
             }
             else {
-                this.field.setCustomValidity('Invalid entry');
+                this.field.validity('Invalid entry');
                 window.console.log(`Bad entry on ${name}`);
             }
-        };
+        });
         this.value=value;
     }
 
@@ -82,20 +82,22 @@ class PropertyField {
             case 'number':
                 return parseFloat(this.field.value);
             case 'bool':
-                return this.field.checked;
+                return this.field.value;
             default:
                 return this.field.value;
         }
     }
     set value(value) {
+        window.console.log(`Setting ${this.name} to ${value}`);
         switch (this.kind) {
             case 'bool':
-                this.field.checked=value;
+                this.field.value=value;
                 break;
             default:
                 this.field.value=value;
                 break;
         }
+        window.console.log(`${this.name}.value=${this.field.value}`);
     }
 
 

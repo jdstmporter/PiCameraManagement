@@ -125,9 +125,23 @@ a img {
   outline: 0;
 }
 #inputs table {
-  border-color: black;
+  border-collapse: collapse;
+  border: 1px solid black;
 }
-#inputs table input {
+#inputs table td,
+#inputs table th {
+  border: 1px solid black;
+  padding: 0 4px 0 4px;
+}
+#inputs table td input,
+#inputs table th input {
   background-color: white;
+  margin-bottom: 2px;
+}
+#inputs table th {
+  text-align: center;
+}
+#inputs table th[empty=true] {
+  border-width: 0;
 }
 /*# sourceMappingURL=styles.css.map */

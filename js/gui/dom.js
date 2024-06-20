@@ -63,12 +63,12 @@ class DOM {
     }
 
     setAttr(name,value) {
-        this.element.setAttr(name,value);
+        this.element.setAttribute(name,value);
         return this;
     }
 
     setAttrs(kv) {
-        Object.keys(kv).forEach(key => this.element.setAttr(key,kv[key]));
+        Object.keys(kv).forEach(key => this.element.setAttribute(key,kv[key]));
         return this;
     }
 
@@ -97,8 +97,24 @@ class DOM {
         return this.element[name];
     }
 
-    set [name](value) { this.element[name]=value; }
-    get [name]() { return this.element[name]; }
+    get value() {
+        return (this.element.type==='checkbox')? this.element.checked : this.element.value;
+    }
+    set value(v) {
+        if(this.element.type==='checkbox') {
+            this.element.checked=v;
+        }
+        else {
+            this.element.value = v;
+        }
+    }
+
+    validity(error = '') {
+        this.element.setCustomValidity(error);
+    }
+
+    //set [name](value) { this.element[name]=value; }
+    //get [name]() { return this.element[name]; }
 
 
 

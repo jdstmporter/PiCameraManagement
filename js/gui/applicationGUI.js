@@ -6,17 +6,24 @@ export {ApplicationGUI};
 import {PiPropertyValues} from '../picam/dataTable.js';
 import {PiCam} from "../picam/structure/picam.js";
 import {Defaults} from "../defaults/defaults.js";
-import {DOM} from "./dom.js";
+import {DOM, DOMHelper} from "./dom.js";
 
 class ApplicationGUI {
 
-    static Headers = [
-        'Default',
-        'Description',
-        'Value',
-        '',
-        ''
-    ];
+    /**
+     *
+     * @returns {Object.<string,string>}
+     * @constructor
+     */
+    static Headers() {
+        return {
+            'Default': 'text',
+            'Description': 'text',
+            'Value': 'text',
+            'To default': 'button',
+            'To current': 'button'
+        };
+    }
 
     constructor(mode = Modes.Normal) {
         this.IP = Defaults.IP_ADDRESS;
@@ -55,15 +62,44 @@ class ApplicationGUI {
         this.render();
     }
 
+    /**
+     *
+     * @param {string} key
+     */
+    #actions(key) {
+        let match = /To\s([a-zA-Z]+)$/.exec(key);
+        if(match===null || match.length<2) { return; }
+        let field=match[1];
+        Object.keys(this.rows).forEach(key => {
+            console.log(`Resetting ${field} on row ${key}`);
+            this.rows[key].reset(field);
+        });
+    }
+
     render() {
         this.tag.empty();
 
         let table = new DOM('table');
         let headerRow = new DOM('tr');
-        ApplicationGUI.Headers.forEach( text => {
-            let th = new DOM('th').text(text).setAttr('empty',text==='');
+        let hdrs = ApplicationGUI.Headers();
+        Object.keys(hdrs).forEach(key => {
+            let value = hdrs[key];
+            let th = new DOM('th');
+            switch(value) {
+                case 'text':
+                    th.text(key);
+                    break;
+                case 'button':
+                    th.append(DOMHelper.Button(key,key).setProp('onclick', (ev) => {
+                        this.#actions(key);
+                    }));
+                    break;
+                default:
+                    break;
+            }
             headerRow.append(th);
         });
+
         table.append(headerRow);
 
 

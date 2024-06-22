@@ -88,6 +88,19 @@ class TableRow {
         return row;
     }
 
+    reset(field) {
+        switch(field) {
+            case 'default':
+                this.resetD.click();
+                break;
+            case 'current':
+                this.resetC.click();
+                break;
+            default:
+                break;
+        }
+    }
+
 
 
 }

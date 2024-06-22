@@ -1,4 +1,4 @@
-export {DOM};
+export {DOM, DOMHelper};
 
 class DOM {
 
@@ -12,8 +12,8 @@ class DOM {
     }
 
     /**
-     *
-     * @param {string|HTMLElement }tag
+     * @desc class constructor
+     * @param {string|HTMLElement} tag
      * @param {object} props
      */
     constructor(tag, props = {}) {
@@ -29,8 +29,8 @@ class DOM {
     get dom() { return this.element; }
 
     /**
-     *
-     * @param {Node} root
+     * @desc Attach as child
+     * @param {Node} root - the parent
      */
     map(root = document) {
         root.appendChild(this.element);
@@ -45,6 +45,10 @@ class DOM {
         return this;
     }
 
+    /**
+     * @desc Remove all child elements
+     * @returns {DOM}
+     */
     empty() {
         while(this.element.firstChild) {
             this.element.removeChild(this.element.firstChild);
@@ -62,11 +66,22 @@ class DOM {
         return this;
     }
 
+    /**
+     *
+     * @param {string} name
+     * @param {any}value
+     * @returns {DOM}
+     */
     setAttr(name,value) {
         this.element.setAttribute(name,value);
         return this;
     }
 
+    /**
+     *
+     * @param {Object<string,any>} kv - ket-value pairs for properties to set
+     * @returns {DOM} - this
+     */
     setAttrs(kv) {
         Object.keys(kv).forEach(key => this.element.setAttribute(key,kv[key]));
         return this;
@@ -85,7 +100,7 @@ class DOM {
 
     /**
      *
-     * @param {object} kv
+     * @param {Object<string,any>} kv
      * @return {DOM}
      */
     setProps(kv) {
@@ -93,13 +108,29 @@ class DOM {
         return this;
     }
 
+    /**
+     *
+     * @param {string} name - parameter name
+     * @returns {*}
+     */
     getProp(name) {
         return this.element[name];
     }
 
+
+
+    /**
+     * @desc Getter for data value (depending on control type)
+     * @returns {*}
+     */
     get value() {
         return (this.element.type==='checkbox')? this.element.checked : this.element.value;
     }
+
+    /**
+     * @desc Setter for data value (depending on control type)
+     * @param v
+     */
     set value(v) {
         if(this.element.type==='checkbox') {
             this.element.checked=v;
@@ -109,6 +140,10 @@ class DOM {
         }
     }
 
+    /**
+     *
+     * @param {string} [error=] - validity error message to set ('' -> no error)
+     */
     validity(error = '') {
         this.element.setCustomValidity(error);
     }
@@ -116,7 +151,28 @@ class DOM {
     //set [name](value) { this.element[name]=value; }
     //get [name]() { return this.element[name]; }
 
+    click() {
+        this.element.click();
+    }
 
 
+}
+
+class DOMHelper {
+    /**
+     *
+     * @param {string} message
+     * @param {string} name
+     * @returns {DOM}
+     * @constructor
+     */
+    static Button(message,name='') {
+        return new DOM('button')
+            .text(message)
+            .setAttrs({
+                type: 'button',
+                name: name
+            });
+    }
 }
 

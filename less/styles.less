@@ -1,24 +1,50 @@
 @import "reset.less";
 
+@buttonBackground: #e0e0c0;
+@specialButtonBackground: darken(@buttonBackground,30%);
+
+.inputs(@bg : white) {
+  margin: 2px;
+  padding: 2px;
+  background-color: @bg;
+}
+.border(@colour: black) {
+  border: 1px solid @colour;
+}
+.noBorder() {
+  border-style: none;
+}
+
 #inputs {
 
   table {
     border-collapse: collapse;
-    border: 1px solid black;
+    .border();
     td, th {
-      border: 1px solid black;
+      .border();
       padding: 0 4px 0 4px;
-      input {
-        background-color: white;
-        margin-bottom: 2px;
-      }
-    }
-    th {
       text-align: center;
-      &[empty=true] {
-        border-width: 0;
+      input, select {
+        display: block;
+        width: 100%;
+        .inputs();
+        .noBorder();
+      }
+      select {
+        .border();
+      }
+      button {
+        .inputs(@buttonBackground);
+        .border(gray);
+        border-radius: 4px;
+        &.all {
+          border-width: 2px;
+          border-color: black;
+          background-color: @specialButtonBackground;
+        }
       }
     }
+
 
   }
 

@@ -76,10 +76,7 @@ class ApplicationGUI {
         });
     }
 
-    render() {
-        this.tag.empty();
-
-        let table = new DOM('table');
+    #headerRow() {
         let headerRow = new DOM('tr');
         let hdrs = ApplicationGUI.Headers();
         Object.keys(hdrs).forEach(key => {
@@ -90,7 +87,8 @@ class ApplicationGUI {
                     th.text(key);
                     break;
                 case 'button':
-                    th.append(DOMHelper.Button(key,key).setProp('onclick', (ev) => {
+                    th.append(DOMHelper.Button(key,key).addClass('all')
+                        .setProp('onclick', (ev) => {
                         this.#actions(key);
                     }));
                     break;
@@ -99,8 +97,15 @@ class ApplicationGUI {
             }
             headerRow.append(th);
         });
+        return headerRow;
+    }
 
-        table.append(headerRow);
+    render() {
+        this.tag.empty();
+
+        let table = new DOM('table');
+
+        table.append(this.#headerRow());
 
 
         PiCam.keys(this.mode).forEach( key => table.append(this.rows[key].dom));

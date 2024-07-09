@@ -56,6 +56,11 @@ class DOM {
         return this;
     }
 
+    unmap() {
+        this.element.parentElement?.removeChild(this.element);
+        return this;
+    }
+
     /**
      *
      * @param {string} value
@@ -116,6 +121,35 @@ class DOM {
     getProp(name) {
         return this.element[name];
     }
+
+    /**
+     *
+     * @param {Array<string>} classes
+     * @returns {DOM}
+     */
+    addClasses(classes = []) {
+        this.element.classList.add(...classes);
+        return this;
+    }
+
+    /**
+     *
+     * @param {string} klass
+     * @returns {DOM}
+     */
+    addClass(klass) {
+        return this.addClasses([klass]);
+    }
+
+    /**
+     *
+     * @param {string} klass
+     * @returns {boolean}
+     */
+    hasClass(klass = '') {
+        return this.element.classList.contains(klass);
+    }
+
 
 
 
